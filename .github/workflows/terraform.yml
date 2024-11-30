@@ -47,7 +47,7 @@ name: Terraform Workflow
 on:
   pull_request:
     paths:
-      - "terraform-files/**"  # Trigger on changes to Terraform files
+      - "terraform/**"  # Trigger on changes to Terraform files
   push:
     branches:
       - main  # Trigger on push to the main branch

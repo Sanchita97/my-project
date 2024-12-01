@@ -70,8 +70,11 @@ jobs:
 
       - name: Configure AWS credentials
         run: |
-          echo "AWS Access Key: ${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS Secret Key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "region = ${{ secrets.AWS_REGION }}" > ~/.aws/config
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -88,8 +91,17 @@ jobs:
       - name: Terraform Plan
         run: terraform plan  # Show the execution plan (what Terraform will do)
         working-directory: terraform/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve  # Apply the plan (create/update resources)
         working-directory: terraform/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+
 
